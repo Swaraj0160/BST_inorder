@@ -1,95 +1,145 @@
 # Binary Search Tree: Inorder Traversal & Dynamic Visualization
 
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Swaraj0160/BST_inorder/blob/main/jurry.ipynb)
-[![Python](https://img.shields.io/badge/Python-3.8%2B-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
-[![NetworkX](https://img.shields.io/badge/Graph-NetworkX-blue?style=for-the-badge)](https://networkx.org/)
-[![Matplotlib](https://img.shields.io/badge/Plotting-Matplotlib-orange?style=for-the-badge)](https://matplotlib.org/)
-[![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
+<p align="center">
+  <strong>Step-by-Step Algorithmic Tree Traversal & Recursive State Visualizer</strong><br>
+  <em>Interactive Python visualizer demonstrating the recursive Inorder Traversal invariant (Left → Root → Right) yielding monotonically sorted output sequences using NetworkX and Matplotlib.</em>
+</p>
 
-An interactive, step-by-step animated visualizer and implementation of **Binary Search Tree (BST)** insertion and **Inorder Traversal (Left → Root → Right)** using Python, NetworkX, and Matplotlib.
+<p align="center">
+  <a href="https://colab.research.google.com/github/Swaraj0160/BST_inorder/blob/main/jurry.ipynb">
+    <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab">
+  </a>
+  <img src="https://img.shields.io/badge/Python-3.8%2B-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python">
+  <img src="https://img.shields.io/badge/Graph-NetworkX-blue?style=for-the-badge" alt="NetworkX">
+  <img src="https://img.shields.io/badge/Plotting-Matplotlib-orange?style=for-the-badge" alt="Matplotlib">
+  <img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge" alt="License">
+</p>
 
 ---
 
-## 🌳 Traversal Theory: Inorder on BST
+## Overview
 
-In a valid Binary Search Tree, for any given node:
-- All keys in its left subtree are strictly **less** than the node's key.
-- All keys in its right subtree are strictly **greater** than the node's key.
+**Binary Search Tree: Inorder Traversal & Dynamic Visualization** is an educational algorithmic visualizer and data structures reference implementation authored in Python (`jurry.ipynb`). By integrating **NetworkX** graph hierarchies with **Matplotlib** dynamic plotting, the notebook transforms abstract recursive call stacks into step-by-step visual tree animations.
 
-Because of this recursive invariant, an **Inorder Traversal** (`Left → Node → Right`) visits the elements in **strictly non-decreasing, monotonically sorted order**.
+The visualizer specifically demonstrates one of computer science's fundamental data structure invariants: why an **Inorder Traversal** (`Left → Node → Right`) over a valid Binary Search Tree always visits elements in **strictly non-decreasing, sorted order**.
 
-```mermaid
-flowchart TD
-    15((15)) --> 7((7))
-    15 --> 23((23))
-    7 --> 2((2))
-    7 --> 14((14))
-    23 --> 16((16))
-    23 --> 27((27))
-    2 --> 1((1))
-    2 --> 3((3))
+---
 
-    classDef root fill:#A3E4D7,stroke:#2c3e50,stroke-width:2px,color:#2c3e50;
-    classDef leaf fill:#D6EAF8,stroke:#2c3e50,stroke-width:1.5px,color:#2c3e50;
-    class 15 root;
-    class 7,23,2,14,16,27,1,3 leaf;
+## The Tree Traversal Pedagogy Bottleneck & The Visualizer Solution
+
+### The Challenge
+- **Abstract Call Stacks:** Computer science students frequently struggle to visualize how recursive stack frames unwind from deep leaf nodes back to ancestors.
+- **Static Textbook Diagrams:** Traditional static diagrams only show the final tree topology without illustrating the temporal order in which nodes are visited and appended to the output array.
+- **Overlapping Node Coordinates:** Basic graph drawing utilities frequently overlap nodes or produce tangled edges when plotting unbalanced or multi-tier binary trees.
+
+### The Visualizer Solution
+- **Temporal Step Badging:** Every visited node receives an explicit numeric sequence badge (e.g., `Step 1`, `Step 2`, `...`, `Step 9`), revealing the exact execution order.
+- **Tri-Color Frame State Animation:** Nodes transition dynamically across three distinct visual states: *Unvisited* (`#D6EAF8`), *Currently Visiting* (`#A3E4D7`), and *Visited / Output Confirmed* (`#F9E79F`).
+- **Deterministic 2D Coordinate Layout:** A recursive depth-stratified coordinate builder positions left and right child subtrees without edge crossing.
+- **Zero-Setup Cloud Execution:** Bundled with a one-click Google Colab badge for instant interactive execution without local Python installation.
+
+---
+
+## Visual Showcase: Inorder Traversal Mechanics
+
+The vector diagram below illustrates the exact 9-node Binary Search Tree and execution path implemented in `jurry.ipynb`:
+
+![Binary Search Tree Inorder Traversal](assets/bst_visualization.svg)
+
+*Inorder traversal order: Leftmost leaf `1` (Step 1) → Parent `2` (Step 2) → Right child `3` (Step 3) → Ancestor `7` (Step 4) → Sibling branch `14` (Step 5) → Root `15` (Step 6) → Right subtree `16` (Step 7) → Node `23` (Step 8) → Maximum leaf `27` (Step 9). Output sequence is strictly sorted: `[1, 2, 3, 7, 14, 15, 16, 23, 27]`.*
+
+---
+
+## Algorithmic Theory & Traversal Invariant
+
+In any valid Binary Search Tree, every node $x$ satisfies the BST invariant:
+- For every key $y$ in the left subtree of $x$: $y < x.\text{key}$
+- For every key $z$ in the right subtree of $x$: $z > x.\text{key}$
+
+```text
+Algorithm Inorder(Node):
+  1. If Node is NULL, return.
+  2. Inorder(Node.left)
+  3. Process(Node.key)       <-- Appended to result list
+  4. Inorder(Node.right)
 ```
 
-**Resulting Inorder Sequence:**  
-`[1, 2, 3, 7, 14, 15, 16, 23, 27]`
+By induction, visiting the entire left subtree ($< x$), recording $x$, and then visiting the right subtree ($> x$) produces a monotonic sorted progression across all nodes.
 
 ---
 
-## 🎨 Visualization Mechanics
+## Core Implemented Capabilities
 
-The notebook visualizes the tree at each algorithmic decision point with clear color coding and numerical step badges:
+### 1. Object-Oriented BST Engine
+- Custom `Node` and `BST` classes encapsulating key insertion, binary partitioning, and recursive tree traversals.
+- Preservation of tree invariants without duplicate-key corruption.
 
-| State | Visual Indicator | Meaning |
-|---|---|---|
-| **Unvisited** | `#D6EAF8` (Light Cyan) | Node awaiting traversal in the recursive call stack |
-| **Currently Visiting** | `#A3E4D7` (Mint Green) | Active frame where `node.key` is being processed and appended |
-| **Visited** | `#F9E79F` (Soft Yellow) | Processed node with its completed traversal step badge displayed below |
+### 2. NetworkX Visual Coordinate Builder
+- Custom 2D layout calculation dynamically assigning $(X, Y)$ plane coordinates based on tree depth and horizontal branch width.
+- Eliminates node collisions regardless of whether subtrees are balanced or skewed.
 
-- **Dynamic Layout Generation:** Recursive 2D coordinate calculation (`build_graph()`) positions nodes neatly across depth layers without edge overlap.
-- **Step Delay Control:** Configurable animation delay (`0.5s` – `1.5s`) for classroom demonstrations and learning.
+### 3. Animated Step-by-Step Rendering
+- Clear color coding:
+  - **Light Blue (`#D6EAF8`):** Unvisited node pending in stack.
+  - **Mint Green (`#A3E4D7`):** Active node in current frame.
+  - **Gold / Yellow (`#F9E79F`):** Visited node with sorted index badge.
+- Configurable animation delay parameter (`0.5s` – `1.5s`) for classroom demonstrations.
 
 ---
 
-## ⚡ Complexity Analysis
+## Complexity Analysis
 
-| Operation | Average Case | Worst Case (Degenerate / Skewed) | Space Complexity |
+| Operation | Average Case | Worst Case (Degenerate) | Space Complexity |
 |---|---|---|---|
-| **Insertion** | $\mathcal{O}(\log n)$ | $\mathcal{O}(n)$ | $\mathcal{O}(\log n)$ |
-| **Search** | $\mathcal{O}(\log n)$ | $\mathcal{O}(n)$ | $\mathcal{O}(\log n)$ |
+| **Tree Insertion** | $\mathcal{O}(\log n)$ | $\mathcal{O}(n)$ | $\mathcal{O}(\log n)$ recursive |
+| **Search Key** | $\mathcal{O}(\log n)$ | $\mathcal{O}(n)$ | $\mathcal{O}(\log n)$ recursive |
 | **Inorder Traversal** | $\mathcal{O}(n)$ | $\mathcal{O}(n)$ | $\mathcal{O}(h)$ call stack |
 
+*Where $n$ represents the total number of nodes, and $h$ represents the maximum tree height ($h = \log_2 n$ balanced, $h = n$ skewed).*
+
 ---
 
-## 🚀 Running the Notebook
+## Repository & Directory Structure
+
+```text
+BST_inorder/
+├── assets/
+│   └── bst_visualization.svg   # High-resolution vector diagram of the BST traversal flow
+├── jurry.ipynb                 # Interactive Jupyter Notebook with complete implementation
+├── LICENSE                     # MIT Open-Source License
+├── README.md                   # Technical documentation and visualization guide
+└── SECURITY.md                 # Security and vulnerability reporting policy
+```
+
+---
+
+## Running the Visualizer
 
 ### Option 1: One-Click Google Colab (Recommended)
-Click the badge above or navigate to:  
-[**Open jurry.ipynb in Google Colab**](https://colab.research.google.com/github/Swaraj0160/BST_inorder/blob/main/jurry.ipynb)
+Launch the notebook in Google Colab with zero configuration:  
+👉 **[Open jurry.ipynb in Google Colab](https://colab.research.google.com/github/Swaraj0160/BST_inorder/blob/main/jurry.ipynb)**
 
-### Option 2: Local Jupyter Environment
+### Option 2: Local Python / Jupyter Environment
 1. Clone the repository:
    ```bash
    git clone https://github.com/Swaraj0160/BST_inorder.git
    cd BST_inorder
    ```
+
 2. Install dependencies:
    ```bash
-   pip install networkx matplotlib ipython
+   pip install matplotlib networkx ipykernel jupyter
    ```
+
 3. Launch Jupyter:
    ```bash
    jupyter notebook jurry.ipynb
    ```
-4. Run all cells and provide custom integer sequences or press Enter to run the pre-loaded 14-node demo dataset.
 
 ---
 
-## 👤 Author & License
+## Author & Acknowledgements
 
-- **Author:** **Swaraj Ingale** ([@Swaraj0160](https://github.com/Swaraj0160))
-- **License:** [MIT License](LICENSE)
+- **Developer:** **Swaraj Ingale** ([@Swaraj0160](https://github.com/Swaraj0160))
+- **Topic:** Data Structures & Algorithms (Trees, Graphs, Recursion)
+- **License:** Open-source under the [MIT License](LICENSE).
